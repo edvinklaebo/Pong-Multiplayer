@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, #001100 0%, #003300 50%, #000000 100%);
+    color: #00ff00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+        linear-gradient(90deg, transparent 49%, rgba(0, 255, 0, 0.03) 50%, transparent 51%);
+    pointer-events: none;
+    animation: matrixScan 3s linear infinite;
+}
+
+@keyframes matrixScan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+
+.game-container {
+    text-align: center;
+    background: rgba(0, 20, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+        0 8px 32px rgba(0, 255, 0, 0.2),
+        inset 0 0 20px rgba(0, 255, 0, 0.1);
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+    animation: matrixGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes matrixGlow {
+    0% { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; }
+    100% { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00; }
+}
+
+.score {
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.divider {
+    opacity: 0.5;
+}
+
+#gameCanvas {
+    border: 3px solid rgba(0, 255, 0, 0.5);
+    border-radius: 10px;
+    background: #000;
+    box-shadow: 
+        0 4px 20px rgba(0, 255, 0, 0.3),
+        inset 0 0 50px rgba(0, 255, 0, 0.1);
+    margin: 20px 0;
+    animation: canvasPulse 3s ease-in-out infinite;
+}
+
+@keyframes canvasPulse {
+    0%, 100% { 
+        border-color: rgba(0, 255, 0, 0.5);
+        box-shadow: 0 4px 20px rgba(0, 255, 0, 0.3), inset 0 0 50px rgba(0, 255, 0, 0.1);
+    }
+    50% { 
+        border-color: rgba(0, 255, 0, 0.8);
+        box-shadow: 0 4px 30px rgba(0, 255, 0, 0.5), inset 0 0 60px rgba(0, 255, 0, 0.2);
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.control-group p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+button {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 0 5px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #ff5252, #d63031);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#resetBtn {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+}
+
+#resetBtn:hover {
+    background: linear-gradient(45deg, #6c5ce7, #5f3dc4);
+}
+
+.multiplayer-controls {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(0, 40, 0, 0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.room-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.room-section h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+#roomInput {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(0, 255, 0, 0.5);
+    border-radius: 10px;
+    color: #00ff00;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#roomInput::placeholder {
+    color: rgba(0, 255, 0, 0.5);
+}
+
+#roomInput:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+#joinBtn {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+    color: #000;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+}
+
+#joinBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.4);
+    background: linear-gradient(45deg, #00cc00, #009900);
+}
+
+.game-message {
+    margin-top: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    min-height: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .score {
+        font-size: 1.5rem;
+    }
+    
+    #gameCanvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .control-group {
+        flex-direction: row;
+        justify-content: center;
+    }
+}

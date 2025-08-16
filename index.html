@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>PONG</h1>
+            <div class="score">
+                <span id="player1Score">0</span>
+                <span class="divider">|</span>
+                <span id="player2Score">0</span>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        
+        <div class="multiplayer-controls">
+            <div class="room-section">
+                <h3>🌐 Multiplayer</h3>
+                <input type="text" id="roomInput" placeholder="Enter Room ID (optional)" maxlength="6">
+                <button id="joinBtn">Join/Create Room</button>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Player 1</h3>
+                <p>W / S keys</p>
+            </div>
+            <div class="control-group">
+                <button id="startBtn" style="display: none;">Start Game</button>
+                <button id="resetBtn">Reset</button>
+                <button id="memeBtn">🧅 Meme Mode</button>
+                <button id="soundBtn">🔊 Sound ON</button>
+            </div>
+            <div class="control-group">
+                <h3>Player 2</h3>
+                <p>↑ / ↓ keys</p>
+            </div>
+        </div>
+        
+        <div id="gameMessage" class="game-message"></div>
+    </div>
+    
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="multiplayer-game.js"></script>
+</body>
+</html>
