@@ -451,7 +451,7 @@ class MultiplayerPongGame {
         document.getElementById('gameMessage').textContent = message;
     }
     
-    // Audio methods (simplified versions)
+    // Audio methods with streaming music
     initAudio() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -463,27 +463,83 @@ class MultiplayerPongGame {
     }
     
     startBackgroundMusic() {
-        if (!this.soundEnabled || !this.audioContext) return;
-        this.createMatrixBackgroundTrack();
+        if (!this.soundEnabled) return;
+        
+        // Create audio element for streaming retro music
+        this.backgroundAudio = new Audio();
+        this.backgroundAudio.crossOrigin = 'anonymous';
+        this.backgroundAudio.loop = true;
+        this.backgroundAudio.volume = 0.3;
+        
+        // Try multiple retro game music sources
+        const musicSources = [
+            'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Fallback
+            'https://archive.org/download/TetrisThemeMusic/Tetris.mp3',
+            'https://archive.org/download/arcade-music/8-bit-music.mp3'
+        ];
+        
+        this.tryPlayMusic(musicSources, 0);
     }
     
-    createMatrixBackgroundTrack() {
+    tryPlayMusic(sources, index) {
+        if (index >= sources.length) {
+            console.log('No music sources available, using synthesized fallback');
+            this.createSimpleBackgroundTrack();
+            return;
+        }
+        
+        this.backgroundAudio.src = sources[index];
+        
+        this.backgroundAudio.addEventListener('canplaythrough', () => {
+            if (this.soundEnabled) {
+                this.backgroundAudio.play().catch(() => {
+                    console.log('Autoplay blocked, music will start on user interaction');
+                });
+            }
+        }, { once: true });
+        
+        this.backgroundAudio.addEventListener('error', () => {
+            console.log(`Music source ${index} failed, trying next...`);
+            this.tryPlayMusic(sources, index + 1);
+        }, { once: true });
+        
+        this.backgroundAudio.load();
+    }
+    
+    createSimpleBackgroundTrack() {
+        if (!this.audioContext) return;
+        
         const masterGain = this.audioContext.createGain();
         masterGain.connect(this.audioContext.destination);
-        masterGain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+        masterGain.gain.setValueAtTime(0.05, this.audioContext.currentTime);
         
-        const bassOsc = this.audioContext.createOscillator();
-        const bassGain = this.audioContext.createGain();
+        // Simple retro-style melody
+        const notes = [262, 294, 330, 349, 392, 440, 494, 523]; // C major scale
+        let noteIndex = 0;
         
-        bassOsc.connect(bassGain);
-        bassGain.connect(masterGain);
+        const playNote = () => {
+            if (!this.soundEnabled) return;
+            
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            
+            osc.connect(gain);
+            gain.connect(masterGain);
+            
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(notes[noteIndex], this.audioContext.currentTime);
+            
+            gain.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+            
+            osc.start();
+            osc.stop(this.audioContext.currentTime + 0.5);
+            
+            noteIndex = (noteIndex + 1) % notes.length;
+            setTimeout(playNote, 600);
+        };
         
-        bassOsc.type = 'sawtooth';
-        bassOsc.frequency.setValueAtTime(55, this.audioContext.currentTime);
-        bassGain.gain.setValueAtTime(0.6, this.audioContext.currentTime);
-        
-        bassOsc.start();
-        this.backgroundMusic = { bassOsc, masterGain, bassGain };
+        playNote();
     }
     
     playPaddleHitSound() {
